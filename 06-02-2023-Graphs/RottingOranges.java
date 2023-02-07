@@ -20,11 +20,14 @@ class Solution {
                 else if(grid[i][j]==1) fresh+=1;
             }
         }
+        if(fresh==0) return 0;
+        // System.out.println("fresh "+fresh);
         int [] xx = {0,0,-1,1};
         int [] yy = {1,-1,0,0};
-        int timer=0,sizc=0;
+        int timer=0,sizc=0,bsiz=queue.size();
         while(!queue.isEmpty()){
             int siz = queue.size();
+            // System.out.println("size "+siz);
             sizc+=siz;
             for(int i=0;i<siz;i++){
                 Sample rot = queue.poll();
@@ -34,13 +37,21 @@ class Solution {
                     int nx = x+xx[k];
                     int ny = y+yy[k];
 
-                    if(nx<0 || ny<=|| nx>=grid.length || ny>=grid.get(0).length || grid[nx][ny]==0 || grid[nx][ny]==2)
+                    if(nx<0 || ny<0|| nx>=grid.length || ny>=grid[0].length || grid[nx][ny]==0 || grid[nx][ny]==2) continue;
+
+                    grid[nx][ny] = 2;
+                    queue.add(new Sample(nx,ny));
 
                 }
 
 
             }
+            if(queue.size()!=0)
+            timer+=1;
         }
+
+        if((sizc-bsiz)==fresh) return timer;
+        return -1;
         
     }
 }
