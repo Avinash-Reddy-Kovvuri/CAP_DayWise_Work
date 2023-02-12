@@ -1,46 +1,43 @@
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
 
-        ArrayList < ArrayList < Integer >>adj=new ArrayList<>();
+        ArrayList<ArrayList<Integer>> li = new ArrayList<>();
 
-        for(int i=0;i<=numCourses;i++){
-            adj.add(new ArrayList<>());
-        }
-
-        for(int i=0;i<prerequisites.length;i++){
-            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
-        }
-
-
-        Queue<Integer>q=new LinkedList<>();
-        int indegree[]=new int[numCourses];
-        
         for(int i=0;i<numCourses;i++){
-            for(int e:adj.get(i)){
-                indegree[e]++;
+            li.add(new ArrayList<Integer>());
+        }
+
+        for(int j=0;j<prerequisites.length;j++){
+            int a = prerequisites[j][0];
+            int b = prerequisites[j][1];
+            li.get(b).add(a);
+        }
+
+        int [] indeg = new int[li.size()];
+
+        for(int i=0;i<li.size();i++){
+            for(int va : li.get(i)){
+                indeg[va]++;
             }
         }
-        
-        for(int i=0;i<numCourses;i++){
-            if(indegree[i]==0){
-                q.add(i);
-            }
+        Queue<Integer> queue = new LinkedList<>();
+
+        for(int i=0;i<indeg.length;i++){
+            if(indeg[i]==0) queue.add(i);
         }
-        
-        int ans[]=new int[numCourses];
-        int i=0;
-        
-        while(!q.isEmpty()){
-            int node=q.peek();
-            q.poll();
-            ans[i++]=node;
-            
-            for(int e:adj.get(node)){
-                indegree[e]--;
-                if(indegree[e]==0) q.add(e);
+        int c=0;
+        while(queue.size()!=0){
+            int val = queue.poll();
+            for(int kk : li.get(val)){
+                indeg[kk]--;
+                if(indeg[kk]==0){queue.add(kk);}
             }
+            c+=1;
         }
-        if(i==numCourses) return true;
+
+        if(c==numCourses) return true;
         return false;
+
+        
     }
 }
