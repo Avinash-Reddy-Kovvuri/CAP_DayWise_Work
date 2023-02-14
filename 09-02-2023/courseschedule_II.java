@@ -45,3 +45,50 @@ class Solution {
     return new int[0];
   }
 }
+
+OR 
+
+
+class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+
+        Map<Integer, List<Integer>> adj = new HashMap<>(numCourses);
+
+        int[] indeg = new int[numCourses];
+        for(int i=0;i<numCourses;i++){
+            adj.put(i,new ArrayList<Integer>());
+        }
+        for(int j=0;j<prerequisites.length;j++){
+
+            int a = prerequisites[j][0];
+            int b = prerequisites[j][1];
+            List<Integer> li = adj.get(b);
+            li.add(a);
+            adj.put(b,li);
+            // System.out.println("Indeg "+a);
+            indeg[a]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i=0;i<indeg.length;i++){
+            if(indeg[i]==0){
+                queue.add(i);
+            }
+        }
+        int[] result = new int[numCourses];
+        int h=0;
+        // System.out.println(queue.size());
+        while(queue.size()!=0){
+            int item = queue.poll();
+            result[h++] = item;
+            if(adj.containsKey(item))
+            for(int nei : adj.get(item)){
+                indeg[nei]--;
+                if(indeg[nei]==0) queue.add(nei);
+            }
+        }
+        
+        if(h==numCourses) return result;
+        return new int[0];
+       
+    }
+}
