@@ -38,3 +38,38 @@ class Solution {
         }
     }
 }
+
+OR
+
+class Solution {
+    
+    public int findCircleNum(int[][] isConnected) {
+
+        
+        boolean[] vis = new boolean[isConnected.length];
+        int c=0;
+
+        for(int i=0;i<isConnected.length;i++){
+            if(!vis[i]){
+                c+=1;
+                bfs(i,isConnected,vis);
+            }
+        }
+
+        return c;
+
+        
+        
+    }
+    public void bfs(int src,int[][] conn,boolean[] vis){
+
+        vis[src]=true;
+        int [] nei = conn[src];
+        for(int j=0;j<nei.length;j++){
+            if(!vis[j]){
+            if(nei[j]==1) bfs(j,conn,vis);
+             }
+        }
+
+    }
+}
