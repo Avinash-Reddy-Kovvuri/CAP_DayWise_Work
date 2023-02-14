@@ -1,57 +1,72 @@
-import java.util.*;
-import javafx.util.Pair;
+import java.util.* ;
+import java.io.*; 
 
+class Pair implements Comparable<Pair>{
+
+		int dis;
+		int des;
+		public Pair(int dis,int des){
+			this.dis = dis;
+			this.des = des;
+		}
+		public int compareTo(Pair p1){
+
+			if(this.dis>p1.dis) return 1;
+			if(this.dis<p1.dis) return -1;
+			return 0;
+		}
+	}
 public class Solution {
-    public static ArrayList < Integer > dijkstraHelper(ArrayList < ArrayList < Pair < Integer, Integer >>> adjacencyList, int vertices, int source) {
-        
-        PriorityQueue < Pair < Integer, Integer > > pq = new PriorityQueue < Pair < Integer, Integer >> (vertices, Comparator.comparing(Pair::getKey));
-        ArrayList < Integer > distance = new ArrayList < Integer > (vertices);
-        
-        for (int i = 0; i < vertices; i++) {
-            distance.add(Integer.MAX_VALUE);
-        }
 
-        pq.add(new Pair < Integer, Integer > (0, source));
+	
+	
+	public static ArrayList < Integer > dijkstra(ArrayList< ArrayList < Integer > > vec, int vertices, int edges, int source){
+		// Write your code here.
+		ArrayList<ArrayList<Pair>> adj = new ArrayList<>(vertices+1);
 
-        distance.set(source, 0);
-        ArrayList < Boolean > visited = new ArrayList < Boolean > (vertices);
+		for(int i=0;i<=vertices;i++){
+			adj.add(new ArrayList<Pair>());
+		}
 
-        for (int i = 0; i < vertices; i++) {
-            visited.add(false);
-        }
+		// adj.get(0).add(new Pair(4,1));
+		for(int j=0;j<vec.size();j++){
 
-        while (!pq.isEmpty()) {
-            int u = pq.peek().getValue();
-            pq.remove();
-            visited.set(u, true);
 
-            for (int it = 0; it < adjacencyList.get(u).size(); it++) {
-                int v = adjacencyList.get(u).get(it).getKey();
-                int dist = adjacencyList.get(u).get(it).getValue();
+			adj.get(vec.get(j).get(0)).add(new Pair(vec.get(j).get(2),vec.get(j).get(1)));
+			adj.get(vec.get(j).get(1)).add(new Pair(vec.get(j).get(2),vec.get(j).get(0)));
 
-                if (visited.get(v) == false && distance.get(v) > distance.get(u) + dist) {
-                    distance.set(v, distance.get(u) + dist);
-                    pq.add(new Pair < Integer, Integer > (distance.get(v), v));
-                }
-            }
-        }
+		}
 
-        return distance;
-    }
+		PriorityQueue<Pair> pq = new PriorityQueue<>();
+		
+		int[] dista = new int[vertices];
+		for(int i=0;i<dista.length;i++){dista[i]=Integer.MAX_VALUE;}
+		pq.add(new Pair(0,source));
+		dista[source] = 0;
 
-    public static ArrayList < Integer > dijkstra(ArrayList < ArrayList < Integer > > vec, int vertices, int edges, int source) {
+		while(pq.size()!=0){
+			Pair p = pq.poll();
+			int dist = p.dis;
+			int dest = p.des;
 
-      ArrayList < ArrayList < Pair < Integer, Integer > > > adjacencyList = new ArrayList < ArrayList < Pair < Integer, Integer >>> (vertices);
-      
-      for (int i = 0; i < vertices; i++) {
-          adjacencyList.add(new ArrayList < Pair < Integer, Integer >> ());
-      }
+			for(Pair nei : adj.get(dest)){
 
-      for (int i = 0; i < (int) vec.size(); i++) {
-          adjacencyList.get(vec.get(i).get(0)).add(new Pair < Integer, Integer > (vec.get(i).get(1), vec.get(i).get(2)));
-          adjacencyList.get(vec.get(i).get(1)).add(new Pair < Integer, Integer > (vec.get(i).get(0), vec.get(i).get(2)));
-      }
+				int ndist = nei.dis;
+				int ndes = nei.des;
 
-      return dijkstraHelper(adjacencyList, vertices, 0);
-    }
+				if(dist+ndist < dista[ndes]){
+					pq.add(new Pair((dist+ndist),ndes));
+					dista[ndes] = dist+ndist;
+				}
+			}
+		}
+		ArrayList<Integer> res = new ArrayList<>();
+		for(int i=0;i<dista.length;i++){
+		res.add(dista[i]);}
+		
+		
+		return res;
+		
+
+	}
 }
