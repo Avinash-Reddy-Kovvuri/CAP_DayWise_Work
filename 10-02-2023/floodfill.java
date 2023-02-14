@@ -28,3 +28,47 @@ class Solution {
 
     }
 }
+
+OR 
+
+class Solution {
+    class Pair{
+        int x,y;
+        Pair(int x ,int y){this.x = x;this.y = y;}
+
+    }
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+
+        if(image[sr][sc]==color) return image;
+
+        Queue<Pair> queue = new LinkedList<>();
+        int val = image[sr][sc];
+
+        queue.add(new Pair(sr,sc));
+
+        int[] xx = {0,0,1,-1};
+        int[] yy = {1,-1,0,0};
+
+        int ss = image[sr][sc];
+
+        while(queue.size()!=0){
+
+            Pair p = queue.poll();
+            int x = p.x;
+            int y = p.y;
+            image[x][y] = color;
+            for(int i=0;i<4;i++){
+                int nx = x+xx[i];
+                int ny = y+yy[i];
+                
+                if(nx<0 || ny<0 || nx>image.length-1 || ny>image[0].length-1 || image[nx][ny] != ss)
+                continue;
+                queue.add(new Pair(nx,ny));
+
+
+            }
+        }
+        return image;
+        
+    }
+}
